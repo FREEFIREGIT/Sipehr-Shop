@@ -213,3 +213,18 @@ button {
 .fav-btn.active {
   background: #ff3b30;
 }
+
+/* Ограничаем максимальную ширину карточек */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Ограничиваем размеры изображений внутри карточки */
+.card img {
+  width: 100%;        /* подстраивается под размер карточки */
+  max-width: 180px;   /* максимальная ширина */
+  height: auto;       /* сохраняем пропорции */
+  object-fit: contain;
+}

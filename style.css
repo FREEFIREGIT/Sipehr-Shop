@@ -29,17 +29,25 @@ a {
   top: 0;
   z-index: 100;
   flex-wrap: wrap;
+  transition: all 0.3s;
+}
+
+.header.logged-in .logo-img {
+  width: 30px; /* уменьшаем логотип когда вошёл */
+  height: 30px;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: all 0.3s;
 }
 
 .logo-img {
   width: 40px;
   height: 40px;
+  transition: all 0.3s;
 }
 
 .search input {
@@ -56,11 +64,7 @@ a {
   flex-wrap: wrap;
 }
 
-.header-link {
-  position: relative;
-  cursor: pointer;
-}
-
+/* ====== COUNTERS ====== */
 .fav-counter, .cart-counter {
   background-color: #ff3b3b;
   color: #fff;
@@ -84,11 +88,12 @@ a {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
+  padding: 3px 8px; /* меньше кнопка */
   border: 1px solid #ccc;
   background-color: #fff;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 13px;
   transition: all 0.2s;
 }
 
@@ -97,16 +102,22 @@ a {
 }
 
 .google-icon {
-  width: 20px;
-  height: 20px;
+  width: 16px; /* меньше иконка */
+  height: 16px;
 }
 
 .google-user-avatar {
-  width: 35px;
-  height: 35px;
+  width: 30px; /* аватарка меньше */
+  height: 30px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid #4285F4;
+  transition: all 0.3s;
+}
+
+.google-user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 /* ====== MAIN & PRODUCTS ====== */
@@ -128,16 +139,22 @@ a {
   border-radius: 10px;
   position: relative;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .card img {
   width: 100%;
   border-radius: 10px;
+  transition: all 0.3s;
+}
+
+.card img:hover {
+  transform: scale(1.05);
 }
 
 .card h3 {
@@ -161,6 +178,7 @@ a {
   background-color: #4285F4;
   color: #fff;
   width: 100%;
+  transition: all 0.2s;
 }
 
 .card .btn:hover {
@@ -174,10 +192,12 @@ a {
   background-color: #fff;
   color: #ff3b3b;
   font-size: 18px;
+  transition: all 0.2s;
 }
 
 .fav-btn.active {
   color: #ff0000;
+  transform: scale(1.2);
 }
 
 /* ====== CART DROPDOWN ====== */
@@ -280,7 +300,12 @@ a {
   }
 
   .google-signin button {
-    padding: 5px 8px;
-    font-size: 14px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .google-user-avatar {
+    width: 28px;
+    height: 28px;
   }
 }

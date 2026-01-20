@@ -1,101 +1,138 @@
-/* ===== RESET ===== */
+/* ====== ОБЩИЕ СТИЛИ ====== */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background: #f5f5f5;
-  color: #111;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.4;
 }
 
-/* ===== HEADER ===== */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ====== HEADER ====== */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  padding: 12px 20px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 10px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: sticky;
   top: 0;
   z-index: 100;
+  flex-wrap: wrap;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  text-decoration: none;
-  color: #111;
-  font-weight: bold;
-  font-size: 18px;
 }
 
 .logo-img {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
 }
 
 .search input {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 220px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 200px;
 }
 
 .header-actions {
   display: flex;
+  align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .header-link {
   position: relative;
-  text-decoration: none;
-  color: #111;
-  font-size: 14px;
+  cursor: pointer;
 }
 
-.header-link:hover {
-  color: #000;
-}
-
-/* counters */
-.fav-counter,
-.cart-counter {
-  position: absolute;
-  top: -6px;
-  right: -10px;
-  background: #000;
+.fav-counter, .cart-counter {
+  background-color: #ff3b3b;
   color: #fff;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 20px;
+  font-size: 12px;
+  padding: 2px 5px;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  right: -10px;
 }
 
-/* ===== GRID ===== */
+/* ====== GOOGLE SIGN-IN ====== */
+.google-signin {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.google-signin button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.google-signin button:hover {
+  background-color: #f1f1f1;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.google-user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #4285F4;
+}
+
+/* ====== MAIN & PRODUCTS ====== */
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
-  padding: 25px;
 }
 
-/* ===== CARD ===== */
 .card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 15px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
   position: relative;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
 .card img {
@@ -104,97 +141,75 @@ body {
 }
 
 .card h3 {
+  margin: 10px 0 5px 0;
   font-size: 16px;
-  margin: 10px 0 6px;
-  color: #111;
 }
 
-/* price */
-.price {
+.card .price {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-/* button */
-.btn {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
+.card .btn, .card .fav-btn {
+  padding: 5px 10px;
   border: none;
-  background: #000;
-  color: #fff;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
 }
 
-.btn:hover {
-  opacity: 0.9;
+.card .btn {
+  background-color: #4285F4;
+  color: #fff;
+  width: 100%;
 }
 
-/* ===== FAVORITE ===== */
+.card .btn:hover {
+  background-color: #3367d6;
+}
+
 .fav-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #fff;
-  border: none;
-  border-radius: 50%;
-  padding: 6px;
-  cursor: pointer;
-  font-size: 16px;
+  top: 10px;
+  right: 10px;
+  background-color: #fff;
+  color: #ff3b3b;
+  font-size: 18px;
 }
 
 .fav-btn.active {
-  color: red;
+  color: #ff0000;
 }
 
-/* ===== LINKS ===== */
-.card a {
-  text-decoration: none;
-  color: inherit;
+/* ====== CART DROPDOWN ====== */
+.cart-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #fff;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  z-index: 10;
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 768px) {
-  .search input {
-    width: 140px;
-  }
-
-  .header-actions {
-    gap: 10px;
-  }
-
-  .grid {
-    padding: 15px;
-    gap: 15px;
-  }
-}
-/* ===== CART ===== */
-.cart-page {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 0 15px;
-}
-
-.cart-page h2 {
-  margin-bottom: 20px;
+.dropdown-cart:hover .cart-dropdown {
+  display: flex;
 }
 
 .cart-item {
   display: flex;
-  gap: 15px;
+  gap: 10px;
+  margin-bottom: 10px;
   align-items: center;
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-  animation: fadeUp 0.4s ease;
 }
 
 .cart-item img {
-  width: 80px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
 }
 
 .cart-info {
@@ -202,57 +217,70 @@ body {
 }
 
 .cart-remove {
+  background-color: #ff3b3b;
+  color: #fff;
   border: none;
-  background: none;
-  color: red;
+  padding: 2px 5px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 .cart-total {
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
-  margin: 20px 0;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: right;
 }
 
 .checkout-btn {
+  margin-top: 10px;
+  background-color: #34a853;
+  color: #fff;
   width: 100%;
 }
-/* ===== Google Sign-In Button ===== */
-.google-signin {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+
+/* ====== АДАПТИВ ====== */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search input {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .card .price {
+    font-size: 14px;
+  }
 }
 
-.google-signin button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  border: 2px solid #4285F4;
-  background-color: #fff;
-  color: #4285F4;
-  font-weight: 600;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+@media (max-width: 480px) {
+  .search input {
+    font-size: 14px;
+  }
 
-.google-signin button:hover {
-  background-color: #4285F4;
-  color: #fff;
-}
+  .card .btn, .card .fav-btn {
+    font-size: 14px;
+  }
 
-.google-signin .google-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.google-user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
+  .google-signin button {
+    padding: 5px 8px;
+    font-size: 14px;
+  }
 }

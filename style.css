@@ -1,15 +1,9 @@
-/* ====== ОБЩИЕ СТИЛИ ====== */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
+/* ===== GLOBAL ===== */
 body {
-  background-color: #f5f5f5;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
   color: #333;
-  line-height: 1.4;
 }
 
 a {
@@ -17,219 +11,88 @@ a {
   color: inherit;
 }
 
-/* ====== HEADER ====== */
+button {
+  cursor: pointer;
+}
+
+/* ===== HEADER ===== */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #fff;
   padding: 10px 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-wrap: wrap;
-  transition: all 0.3s;
-}
-
-.header.logged-in .logo-img {
-  width: 30px; /* уменьшаем логотип когда вошёл */
-  height: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: all 0.3s;
 }
 
 .logo-img {
   width: 40px;
   height: 40px;
-  transition: all 0.3s;
-}
-
-.search input {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 200px;
+  object-fit: contain;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-wrap: wrap;
 }
 
-/* ====== COUNTERS ====== */
-.fav-counter, .cart-counter {
-  background-color: #ff3b3b;
+.header-link {
+  position: relative;
+  padding: 5px 10px;
+}
+
+/* ===== CART DROPDOWN ===== */
+.dropdown-cart {
+  position: relative;
+}
+
+.cart-counter {
+  background: #ff3b30;
   color: #fff;
   font-size: 12px;
-  padding: 2px 5px;
+  padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
   top: -5px;
   right: -10px;
 }
 
-/* ====== GOOGLE SIGN-IN ====== */
-.google-signin {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 10px;
-}
-
-.google-signin button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 8px; /* меньше кнопка */
-  border: 1px solid #ccc;
-  background-color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-
-.google-signin button:hover {
-  background-color: #f1f1f1;
-}
-
-.google-icon {
-  width: 16px; /* меньше иконка */
-  height: 16px;
-}
-
-.google-user-avatar {
-  width: 30px; /* аватарка меньше */
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid #4285F4;
-  transition: all 0.3s;
-}
-
-.google-user-avatar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
-}
-
-/* ====== MAIN & PRODUCTS ====== */
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 20px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  position: relative;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: all 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.card img {
-  width: 100%;
-  border-radius: 10px;
-  transition: all 0.3s;
-}
-
-.card img:hover {
-  transform: scale(1.05);
-}
-
-.card h3 {
-  margin: 10px 0 5px 0;
-  font-size: 16px;
-}
-
-.card .price {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.card .btn, .card .fav-btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.card .btn {
-  background-color: #4285F4;
-  color: #fff;
-  width: 100%;
-  transition: all 0.2s;
-}
-
-.card .btn:hover {
-  background-color: #3367d6;
-}
-
-.fav-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #fff;
-  color: #ff3b3b;
-  font-size: 18px;
-  transition: all 0.2s;
-}
-
-.fav-btn.active {
-  color: #ff0000;
-  transform: scale(1.2);
-}
-
-/* ====== CART DROPDOWN ====== */
 .cart-dropdown {
+  display: none;
   position: absolute;
   top: 30px;
   right: 0;
-  background-color: #fff;
   width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  display: none;
-  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  border-radius: 8px;
   padding: 10px;
-  z-index: 10;
+  z-index: 100;
 }
 
 .dropdown-cart:hover .cart-dropdown {
-  display: flex;
+  display: block;
 }
 
 .cart-item {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-bottom: 10px;
-  align-items: center;
 }
 
 .cart-item img {
   width: 40px;
   height: 40px;
-  border-radius: 5px;
+  object-fit: cover;
 }
 
 .cart-info {
@@ -237,75 +100,116 @@ a {
 }
 
 .cart-remove {
-  background-color: #ff3b3b;
+  background: #ff3b30;
   color: #fff;
   border: none;
-  padding: 2px 5px;
-  border-radius: 5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ===== CHECKOUT BUTTON ===== */
+.checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* ===== FAVORITES COUNTER ===== */
+.fav-counter {
+  background: #ff3b30;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
+
+/* ===== GOOGLE SIGN-IN ===== */
+.google-signin {
+  display: flex;
+  align-items: center;
+}
+
+#googleSignIn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
+  background: #4285F4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+.google-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== GOOGLE USER AVATAR ===== */
+.google-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4285F4;
   cursor: pointer;
 }
 
-.cart-total {
-  font-weight: bold;
-  margin-top: 10px;
-  text-align: right;
+/* ===== MAIN GRID ===== */
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
 }
 
-.checkout-btn {
-  margin-top: 10px;
-  background-color: #34a853;
-  color: #fff;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.card img {
   width: 100%;
+  border-radius: 6px;
 }
 
-/* ====== АДАПТИВ ====== */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .search input {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .header-actions {
-    width: 100%;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-  }
-
-  .card h3 {
-    font-size: 14px;
-  }
-
-  .card .price {
-    font-size: 14px;
-  }
+.card h3 {
+  font-size: 14px;
+  margin: 5px 0;
 }
 
-@media (max-width: 480px) {
-  .search input {
-    font-size: 14px;
-  }
+.card .price {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
-  .card .btn, .card .fav-btn {
-    font-size: 14px;
-  }
+.btn, .fav-btn {
+  border: none;
+  background: #007bff;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
 
-  .google-signin button {
-    padding: 4px 6px;
-    font-size: 12px;
-  }
-
-  .google-user-avatar {
-    width: 28px;
-    height: 28px;
-  }
+.fav-btn.active {
+  background: #ff3b30;
 }

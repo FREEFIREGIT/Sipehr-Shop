@@ -1,3 +1,19 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
+  authDomain: "sipehr-shop.firebaseapp.com",
+  projectId: "sipehr-shop",
+  storageBucket: "sipehr-shop.firebasestorage.app",
+  messagingSenderId: "315068554355",
+  appId: "1:315068554355:web:34a130038f79bf455ade06"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
 // ====== PRODUCTS ======
 const products = {
   1: { id: 1, name: "Buds 2 Pro", price: 1299, img: "buds.jpg" },
@@ -86,3 +102,4 @@ googleBtn.addEventListener("click", ()=>{
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
+

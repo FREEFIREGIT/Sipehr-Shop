@@ -1,43 +1,54 @@
-/* ===== GLOBAL ===== */
-body {
+/* ====== RESET ====== */
+* {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f5f5;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* ====== BODY ====== */
+body {
+  background-color: #f5f5f5;
   color: #333;
+  line-height: 1.4;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-/* ===== HEADER ===== */
+/* ====== HEADER ====== */
 .header {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  background: #fff;
-  padding: 10px 20px;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  text-decoration: none;
+  color: #333;
 }
 
 .logo-img {
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  margin-right: 10px;
 }
 
+/* ====== SEARCH ====== */
+.search input {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+/* ====== HEADER ACTIONS ====== */
 .header-actions {
   display: flex;
   align-items: center;
@@ -45,48 +56,50 @@ button {
 }
 
 .header-link {
-  position: relative;
-  padding: 5px 10px;
-}
-
-/* ===== CART DROPDOWN ===== */
-.dropdown-cart {
+  text-decoration: none;
+  color: #333;
   position: relative;
 }
 
-.cart-counter {
-  background: #ff3b30;
-  color: #fff;
+.header-link .fav-counter,
+.header-link .cart-counter {
+  background: red;
+  color: white;
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: -5px;
+  top: -8px;
   right: -10px;
 }
 
+/* ====== CART DROPDOWN ====== */
+.dropdown-cart {
+  position: relative;
+}
+
 .cart-dropdown {
-  display: none;
   position: absolute;
-  top: 30px;
+  top: 25px;
   right: 0;
   width: 250px;
   background: #fff;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  border-radius: 8px;
+  border: 1px solid #ccc;
   padding: 10px;
-  z-index: 100;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
 }
 
 .dropdown-cart:hover .cart-dropdown {
-  display: block;
+  display: flex;
 }
 
 .cart-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
 }
 
 .cart-item img {
@@ -97,125 +110,161 @@ button {
 
 .cart-info {
   flex: 1;
+  font-size: 14px;
 }
 
 .cart-remove {
-  background: #ff3b30;
-  color: #fff;
+  background: red;
+  color: white;
   border: none;
   padding: 2px 6px;
+  cursor: pointer;
   border-radius: 4px;
 }
 
-/* ===== CHECKOUT BUTTON ===== */
-.checkout-btn {
-  display: block;
-  width: 100%;
-  padding: 8px;
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  margin-top: 10px;
+.cart-total {
   font-weight: bold;
+  margin-top: 5px;
 }
 
-/* ===== FAVORITES COUNTER ===== */
-.fav-counter {
-  background: #ff3b30;
-  color: #fff;
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  right: -10px;
+.checkout-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* ===== GOOGLE SIGN-IN ===== */
+/* ====== GOOGLE SIGN-IN ====== */
 .google-signin {
-  display: flex;
-  align-items: center;
+  margin-left: 10px;
 }
 
-#googleSignIn {
+.google-signin button {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 8px;
-  font-size: 12px;
-  background: #4285F4;
-  color: #fff;
+  background: #4285f4;
+  color: white;
   border: none;
+  padding: 5px 10px;
   border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .google-icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 
-/* ===== GOOGLE USER AVATAR ===== */
+/* Аватарка Google после входа */
 .google-user-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #4285F4;
   cursor: pointer;
 }
 
-/* ===== MAIN GRID ===== */
+/* ====== MAIN ====== */
 .container {
   max-width: 1200px;
   margin: 20px auto;
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
-/* Ограничаем максимальную ширину карточек */
+/* ====== GRID ====== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
 }
 
-/* Ограничиваем размеры изображений внутри карточки */
-.card img {
-  width: 100%;        /* подстраивается под размер карточки */
-  max-width: 180px;   /* максимальная ширина */
-  height: auto;       /* сохраняем пропорции */
-  object-fit: contain;
-}
-
-
+/* ====== CARD ====== */
 .card {
   background: #fff;
   border-radius: 8px;
   padding: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  position: relative;
-}
-.card h3 {
-  font-size: 14px;
-  margin: 5px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.card .price {
+.card img {
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.card h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.price {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-.btn, .fav-btn {
-  border: none;
+.btn {
   background: #007bff;
-  color: #fff;
-  padding: 5px 8px;
+  color: white;
+  border: none;
+  padding: 6px 10px;
   border-radius: 4px;
-  font-size: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.fav-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: red;
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 .fav-btn.active {
-  background: #ff3b30;
+  color: darkred;
 }
 
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 
+  .search input {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .card img {
+    max-width: 120px;
+  }
+
+  .google-signin button {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}

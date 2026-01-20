@@ -7,7 +7,7 @@
 
   <!-- CSS и JS -->
   <link rel="stylesheet" href="style.css">
-  <script defer src="app.js"></script>
+  <script defer type="module" src="app.js"></script>
 </head>
 <body>
 
@@ -43,13 +43,14 @@
     <a href="#" class="header-link">
       Профиль
     </a>
-    <!-- Google Sign-In -->
-    <div class="google-signin">
+  </div>
+
+  <!-- Google Sign-In -->
+  <div class="google-signin">
     <button id="googleSignIn">
-    <img src="google-icon.png" alt="Google" class="google-icon">
-    Войти через Google
+      <img src="google-icon.png" alt="Google" class="google-icon">
+      Войти через Google
     </button>
-    </div>
   </div>
 </header>
 
@@ -93,10 +94,11 @@
   </section>
 </main>
 
-<!-- 🔥 FIREBASE (ПРОСТО ДОБАВИЛ) -->
+<!-- 🔥 FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
   import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
@@ -109,14 +111,14 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   // 👉 делаем доступным для app.js
   window.db = db;
+  window.auth = auth;
 
   console.log("🔥 Firebase подключён");
 </script>
 
 </body>
 </html>
-
-

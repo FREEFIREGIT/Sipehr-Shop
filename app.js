@@ -135,8 +135,55 @@ if (googleBtn) {
       });
   });
 }
+const googleSignInDiv = document.querySelector(".google-signin");
+
+function updateGoogleButton(user) {
+  if (user) {
+    // Пользователь вошёл — показываем аватарку
+    googleSignInDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
+    `;
+  } else {
+    // Нет пользователя — показываем кнопку входа
+    googleSignInDiv.innerHTML = `
+      <button id="googleSignIn">
+        <img src="google-icon.png" alt="Google" class="google-icon">
+        Войти через Google
+      </button>
+    `;
+    // Повторно привязываем событие к кнопке
+    const googleBtn = document.getElementById("googleSignIn");
+    googleBtn.addEventListener("click", signInWithGoogle);
+  }
+}
+
+// Функция для входа через Google
+function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(res => {
+      const user = res.user;
+      console.log("Google user:", user);
+      updateGoogleButton(user);
+      alert(`Привет, ${user.displayName}!`);
+    })
+    .catch(err => {
+      console.error("Google Sign-In error:", err.code, err.message);
+      alert(err.message);
+    });
+}
+
+// Привязка события кнопки
+const googleBtn = document.getElementById("googleSignIn");
+if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
+
+// Проверяем, вошёл ли пользователь при загрузке страницы
+auth.onAuthStateChanged(user => {
+  updateGoogleButton(user);
+});
 
 // ====== INIT ======
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
+

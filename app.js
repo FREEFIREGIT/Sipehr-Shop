@@ -1,10 +1,12 @@
 // ====== FIREBASE ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
+// ⚡ Настройки Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
-  authDomain: "sipehr-shop.firebaseapp.com",
+  authDomain: "sipehr-shop.firebaseapp.com", // не GitHub Pages
   projectId: "sipehr-shop",
   storageBucket: "sipehr-shop.firebasestorage.app",
   messagingSenderId: "315068554355",
@@ -12,8 +14,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+
+// Сделаем доступным для других скриптов
+window.db = db;
+window.auth = auth;
+
+console.log("🔥 Firebase подключён");
 
 // ====== PRODUCTS ======
 const products = {
@@ -30,14 +38,14 @@ function saveCart(cart) {
   renderCartDropdown();
 }
 
-// ====== FAVORITES ======
+// ====== LOCALSTORAGE FAVORITES ======
 function getFavorites() { return JSON.parse(localStorage.getItem("favorites")) || []; }
 function saveFavorites(favs) {
   localStorage.setItem("favorites", JSON.stringify(favs));
   updateFavCounter();
 }
 
-// ====== CART ======
+// ====== CART LOGIC ======
 function addToCart(id) {
   const cart = getCart();
   cart.push(products[id]);
@@ -49,15 +57,16 @@ function updateCartCounter() {
   if (counter) counter.textContent = getCart().length;
 }
 
-// ====== FAVORITES ======
+// ====== FAVORITES LOGIC ======
 function toggleFavorite(id) {
   const favs = getFavorites();
   const index = favs.indexOf(id);
-  index > -1 ? favs.splice(index, 1) : favs.push(id);
+  if (index > -1) favs.splice(index, 1);
+  else favs.push(id);
   saveFavorites(favs);
 }
 
-// ====== CART DROPDOWN ======
+// ====== RENDER CART DROPDOWN ======
 function renderCartDropdown() {
   const list = document.querySelector(".cart-dropdown .cart-list");
   const totalEl = document.querySelector(".cart-dropdown .total-price");
@@ -71,24 +80,25 @@ function renderCartDropdown() {
     total += item.price;
     list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.img}">
+        <img src="${item.img}" alt="${item.name}">
         <div class="cart-info">
           <b>${item.name}</b><br>${item.price} c
         </div>
         <button class="cart-remove" data-index="${index}">x</button>
-      </div>`;
+      </div>
+    `;
   });
 
   totalEl.textContent = total + " c";
 }
 
-// ====== COUNTERS ======
+// ====== FAVORITES COUNTER ======
 function updateFavCounter() {
   const counter = document.querySelector(".fav-counter");
   if (counter) counter.textContent = getFavorites().length;
 }
 
-// ====== EVENTS ======
+// ====== EVENT LISTENERS ======
 document.addEventListener("click", e => {
   const btn = e.target.closest("[data-add-to-cart]");
   if (btn) addToCart(btn.dataset.addToCart);
@@ -111,13 +121,16 @@ const googleBtn = document.getElementById("googleSignIn");
 
 if (googleBtn) {
   googleBtn.addEventListener("click", () => {
+    const provider = new GoogleAuthProvider();
+    // ✅ Открываем попап только один раз
     signInWithPopup(auth, provider)
       .then(res => {
-        alert(`Привет, ${res.user.displayName}!`);
-        console.log("Google user:", res.user);
+        const user = res.user;
+        alert(`Привет, ${user.displayName}!`);
+        console.log("Google user:", user);
       })
       .catch(err => {
-        console.error("Auth error:", err.code, err.message);
+        console.error("Google Sign-In error:", err.code, err.message);
         alert(err.message);
       });
   });

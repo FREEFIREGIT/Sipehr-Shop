@@ -6,7 +6,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase
 // ⚡ Настройки Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
-  authDomain: "sipehr-shop.firebaseapp.com", // не GitHub Pages
+  authDomain: "sipehr-shop.firebaseapp.com",
   projectId: "sipehr-shop",
   storageBucket: "sipehr-shop.firebasestorage.app",
   messagingSenderId: "315068554355",
@@ -20,7 +20,6 @@ const auth = getAuth(app);
 // Сделаем доступным для других скриптов
 window.db = db;
 window.auth = auth;
-
 console.log("🔥 Firebase подключён");
 
 // ====== PRODUCTS ======
@@ -66,7 +65,7 @@ function toggleFavorite(id) {
   saveFavorites(favs);
 }
 
-// ====== RENDER CART DROPDOWN ======
+// ====== CART DROPDOWN ======
 function renderCartDropdown() {
   const list = document.querySelector(".cart-dropdown .cart-list");
   const totalEl = document.querySelector(".cart-dropdown .total-price");
@@ -98,7 +97,49 @@ function updateFavCounter() {
   if (counter) counter.textContent = getFavorites().length;
 }
 
-// ====== EVENT LISTENERS ======
+// ====== GOOGLE SIGN-IN С АВАТАРКОЙ ======
+const googleSignInDiv = document.querySelector(".google-signin");
+
+function updateGoogleButton(user) {
+  if (user) {
+    googleSignInDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
+    `;
+  } else {
+    googleSignInDiv.innerHTML = `
+      <button id="googleSignIn">
+        <img src="google-icon.png" alt="Google" class="google-icon">
+        Войти через Google
+      </button>
+    `;
+    // Повторно привязываем событие
+    const googleBtn = document.getElementById("googleSignIn");
+    if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
+  }
+}
+
+// Функция входа через Google
+function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(res => {
+      const user = res.user;
+      console.log("Google user:", user);
+      updateGoogleButton(user);
+      alert(`Привет, ${user.displayName}!`);
+    })
+    .catch(err => {
+      console.error("Google Sign-In error:", err.code, err.message);
+      alert(err.message);
+    });
+}
+
+// Проверка при загрузке страницы
+auth.onAuthStateChanged(user => {
+  updateGoogleButton(user);
+});
+
+// ====== EVENTS ======
 document.addEventListener("click", e => {
   const btn = e.target.closest("[data-add-to-cart]");
   if (btn) addToCart(btn.dataset.addToCart);
@@ -116,74 +157,7 @@ document.addEventListener("click", e => {
   }
 });
 
-// ====== GOOGLE SIGN-IN ======
-const googleBtn = document.getElementById("googleSignIn");
-
-if (googleBtn) {
-  googleBtn.addEventListener("click", () => {
-    const provider = new GoogleAuthProvider();
-    // ✅ Открываем попап только один раз
-    signInWithPopup(auth, provider)
-      .then(res => {
-        const user = res.user;
-        alert(`Привет, ${user.displayName}!`);
-        console.log("Google user:", user);
-      })
-      .catch(err => {
-        console.error("Google Sign-In error:", err.code, err.message);
-        alert(err.message);
-      });
-  });
-}
-const googleSignInDiv = document.querySelector(".google-signin");
-
-function updateGoogleButton(user) {
-  if (user) {
-    // Пользователь вошёл — показываем аватарку
-    googleSignInDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
-    `;
-  } else {
-    // Нет пользователя — показываем кнопку входа
-    googleSignInDiv.innerHTML = `
-      <button id="googleSignIn">
-        <img src="google-icon.png" alt="Google" class="google-icon">
-        Войти через Google
-      </button>
-    `;
-    // Повторно привязываем событие к кнопке
-    const googleBtn = document.getElementById("googleSignIn");
-    googleBtn.addEventListener("click", signInWithGoogle);
-  }
-}
-
-// Функция для входа через Google
-function signInWithGoogle() {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(res => {
-      const user = res.user;
-      console.log("Google user:", user);
-      updateGoogleButton(user);
-      alert(`Привет, ${user.displayName}!`);
-    })
-    .catch(err => {
-      console.error("Google Sign-In error:", err.code, err.message);
-      alert(err.message);
-    });
-}
-
-// Привязка события кнопки
-const googleBtn = document.getElementById("googleSignIn");
-if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
-
-// Проверяем, вошёл ли пользователь при загрузке страницы
-auth.onAuthStateChanged(user => {
-  updateGoogleButton(user);
-});
-
 // ====== INIT ======
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
-

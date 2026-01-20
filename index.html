@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -93,35 +93,9 @@
 
   </section>
 </main>
-
-<!-- 🔥 FIREBASE -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
-    authDomain: "https://freefiregit.github.io/Sipehr-Shop/",
-    projectId: "sipehr-shop",
-    storageBucket: "sipehr-shop.firebasestorage.app",
-    messagingSenderId: "315068554355",
-    appId: "1:315068554355:web:34a130038f79bf455ade06"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  // 👉 делаем доступным для app.js
-  window.db = db;
-  window.auth = auth;
-
-  console.log("🔥 Firebase подключён");
-</script>
-
 </body>
 </html>
+
 
 
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Sipehr Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS и JS -->
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Sipehr Shop" class="logo-img">
+    <span>Sipehr Shop</span>
+  </a>
+
+  <div class="search">
+    <input type="text" placeholder="Поиск товаров...">
+  </div>
+
+  <div class="header-actions">
+    <a href="favorites.html" class="header-link">
+      Избранное
+      <span class="fav-counter">0</span>
+    </a>
+    
+    <div class="header-link dropdown-cart">
+      Корзина
+      <span class="cart-counter">0</span>
+      <div class="cart-dropdown">
+        <div class="cart-list"></div>
+        <div class="cart-total">
+          Итого: <b class="total-price">0 c</b>
+        </div>
+        <button class="btn checkout-btn">Оформить заказ</button>
+      </div>
+    </div>
+
+    <a href="#" class="header-link">
+      Профиль
+    </a>
+    <!-- Google Sign-In -->
+    <div class="google-signin">
+    <button id="googleSignIn">
+    <img src="google-icon.png" alt="Google" class="google-icon">
+    Войти через Google
+    </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="container">
+  <section class="grid">
+
+    <!-- PRODUCT 1 -->
+    <div class="card">
+      <button class="fav-btn" data-id="1">❤</button>
+      <a href="product-buds2pro.html">
+        <img src="buds.jpg" alt="Buds 2 Pro">
+        <h3>Buds 2 Pro</h3>
+      </a>
+      <div class="price">1299 c</div>
+      <button class="btn" data-add-to-cart="1">Добавить в корзину</button>
+    </div>
+
+    <!-- PRODUCT 2 -->
+    <div class="card">
+      <button class="fav-btn" data-id="2">❤</button>
+      <a href="product-headphones.html">
+        <img src="headphones.jpg" alt="Headphones X">
+        <h3>Headphones X</h3>
+      </a>
+      <div class="price">899 c</div>
+      <button class="btn" data-add-to-cart="2">Добавить в корзину</button>
+    </div>
+
+    <!-- PRODUCT 3 -->
+    <div class="card">
+      <button class="fav-btn" data-id="3">❤</button>
+      <a href="product-earpods.html">
+        <img src="earpods.jpg" alt="EarPods Type-C">
+        <h3>EarPods Type-C</h3>
+      </a>
+      <div class="price">299 c</div>
+      <button class="btn" data-add-to-cart="3">Добавить в корзину</button>
+    </div>
+
+  </section>
+</main>
+
+<!-- 🔥 FIREBASE (ПРОСТО ДОБАВИЛ) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
+    authDomain: "sipehr-shop.firebaseapp.com",
+    projectId: "sipehr-shop",
+    storageBucket: "sipehr-shop.firebasestorage.app",
+    messagingSenderId: "315068554355",
+    appId: "1:315068554355:web:34a130038f79bf455ade06"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 👉 делаем доступным для app.js
+  window.db = db;
+
+  console.log("🔥 Firebase подключён");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Избранное — Sipehr Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Sipehr Shop" class="logo-img">
+    <span>Sipehr Shop</span>
+  </a>
+</header>
+
+<main class="container">
+  <section class="grid favorites-grid">
+    <!-- JS автоматически добавит избранные товары -->
+  </section>
+</main>
+
+<script>
+const favSection = document.querySelector(".favorites-grid");
+const favs = JSON.parse(localStorage.getItem("favorites")) || [];
+favs.forEach(id => {
+  const p = products[id];
+  if (!p) return;
+  favSection.innerHTML += `
+    <div class="card">
+      <a href="product-${p.id}.html">
+        <img src="${p.img}" alt="${p.name}">
+        <h3>${p.name}</h3>
+      </a>
+      <div class="price">${p.price} c</div>
+      <button class="btn" data-add-to-cart="${p.id}">Добавить в корзину</button>
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>

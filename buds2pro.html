@@ -2,16 +2,17 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Sipehr Shop</title>
+  <title>Buds 2 Pro — Sipehr Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script defer src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </head>
 <body>
 
+<!-- ===== HEADER ===== -->
 <header class="header">
   <a href="index.html" class="logo">
-    <img src="logo.png" alt="Sipehr Shop" class="logo-img">
+    <img src="Лого Сипехр Шоп.png" alt="Sipehr Shop" class="logo-img">
     <span>Sipehr Shop</span>
   </a>
 
@@ -37,43 +38,35 @@
       </div>
     </div>
 
-    <a href="#" class="header-link">Профиль</a>
+    <a href="profile.html" class="header-link">
+      Профиль
+    </a>
+  </div>
+
+  <!-- Google Sign-In -->
+  <div class="google-signin">
+    <button id="googleSignIn">
+      <img src="google-icon.png" alt="Google" class="google-icon">
+      Войти через Google
+    </button>
   </div>
 </header>
 
+<!-- ===== MAIN ===== -->
 <main class="container">
-  <section class="grid">
-    <!-- Product 1 -->
-    <div class="card">
-      <button class="fav-btn" data-id="1">❤</button>
-      <a href="product-buds2pro.html">
-        <img src="buds.jpg" alt="Buds 2 Pro">
-        <h3>Buds 2 Pro</h3>
-      </a>
+  <section class="product-page">
+
+    <!-- ===== PRODUCT ===== -->
+    <div class="product-gallery">
+      <img src="buds2pro.png" alt="Buds 2 Pro">
+    </div>
+
+    <div class="product-info">
+      <h1>Buds 2 Pro</h1>
+      <p>Высококачественные наушники с шумоподавлением, длительным временем работы и стильным дизайном.</p>
       <div class="price">1299 c</div>
       <button class="btn" data-add-to-cart="1">Добавить в корзину</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="card">
-      <button class="fav-btn" data-id="2">❤</button>
-      <a href="product-headphones.html">
-        <img src="headphones.jpg" alt="Headphones X">
-        <h3>Headphones X</h3>
-      </a>
-      <div class="price">899 c</div>
-      <button class="btn" data-add-to-cart="2">Добавить в корзину</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="card">
-      <button class="fav-btn" data-id="3">❤</button>
-      <a href="product-earpods.html">
-        <img src="earpods.jpg" alt="EarPods Type-C">
-        <h3>EarPods Type-C</h3>
-      </a>
-      <div class="price">299 c</div>
-      <button class="btn" data-add-to-cart="3">Добавить в корзину</button>
+      <button class="fav-btn" data-id="1">❤ В избранное</button>
     </div>
 
   </section>

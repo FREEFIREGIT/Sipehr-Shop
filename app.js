@@ -1,3 +1,4 @@
+// ====== FIREBASE ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
@@ -23,100 +24,106 @@ const products = {
 
 // ====== LOCALSTORAGE CART ======
 function getCart() { return JSON.parse(localStorage.getItem("cart")) || []; }
-function saveCart(cart) { localStorage.setItem("cart", JSON.stringify(cart)); updateCartCounter(); renderCartDropdown(); }
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCounter();
+  renderCartDropdown();
+}
 
-// ====== LOCALSTORAGE FAVORITES ======
+// ====== FAVORITES ======
 function getFavorites() { return JSON.parse(localStorage.getItem("favorites")) || []; }
-function saveFavorites(favs) { localStorage.setItem("favorites", JSON.stringify(favs)); updateFavCounter(); }
+function saveFavorites(favs) {
+  localStorage.setItem("favorites", JSON.stringify(favs));
+  updateFavCounter();
+}
 
-// ====== CART LOGIC ======
-function addToCart(id) { const cart = getCart(); cart.push(products[id]); saveCart(cart); }
-function updateCartCounter() { const counter = document.querySelector(".cart-counter"); if(counter) counter.textContent = getCart().length; }
+// ====== CART ======
+function addToCart(id) {
+  const cart = getCart();
+  cart.push(products[id]);
+  saveCart(cart);
+}
 
-// ====== FAVORITES LOGIC ======
-function toggleFavorite(id) { const favs = getFavorites(); const index = favs.indexOf(id); if(index > -1){favs.splice(index,1);} else {favs.push(id);} saveFavorites(favs); }
+function updateCartCounter() {
+  const counter = document.querySelector(".cart-counter");
+  if (counter) counter.textContent = getCart().length;
+}
 
-// ====== RENDER CART DROPDOWN ======
+// ====== FAVORITES ======
+function toggleFavorite(id) {
+  const favs = getFavorites();
+  const index = favs.indexOf(id);
+  index > -1 ? favs.splice(index, 1) : favs.push(id);
+  saveFavorites(favs);
+}
+
+// ====== CART DROPDOWN ======
 function renderCartDropdown() {
   const list = document.querySelector(".cart-dropdown .cart-list");
   const totalEl = document.querySelector(".cart-dropdown .total-price");
-  if(!list) return;
+  if (!list) return;
+
   const cart = getCart();
   list.innerHTML = "";
   let total = 0;
-  cart.forEach((item,index)=>{
-    total+=item.price;
-    list.innerHTML+=`
+
+  cart.forEach((item, index) => {
+    total += item.price;
+    list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}">
+        <img src="${item.img}">
         <div class="cart-info">
           <b>${item.name}</b><br>${item.price} c
         </div>
         <button class="cart-remove" data-index="${index}">x</button>
-      </div>
-    `;
+      </div>`;
   });
-  totalEl.textContent = total+" c";
+
+  totalEl.textContent = total + " c";
 }
 
-// ====== RENDER FAVORITES ======
-function updateFavCounter() { const counter = document.querySelector(".fav-counter"); if(counter) counter.textContent = getFavorites().length; }
+// ====== COUNTERS ======
+function updateFavCounter() {
+  const counter = document.querySelector(".fav-counter");
+  if (counter) counter.textContent = getFavorites().length;
+}
 
-// ====== EVENT LISTENERS ======
-document.addEventListener("click", e=>{
+// ====== EVENTS ======
+document.addEventListener("click", e => {
   const btn = e.target.closest("[data-add-to-cart]");
-  if(btn){ addToCart(btn.dataset.addToCart); }
+  if (btn) addToCart(btn.dataset.addToCart);
 
   const favBtn = e.target.closest(".fav-btn");
-  if(favBtn){ toggleFavorite(favBtn.dataset.id); favBtn.classList.toggle("active"); }
+  if (favBtn) {
+    toggleFavorite(favBtn.dataset.id);
+    favBtn.classList.toggle("active");
+  }
 
-  if(e.target.classList.contains("cart-remove")){
-    const index = e.target.dataset.index;
+  if (e.target.classList.contains("cart-remove")) {
     const cart = getCart();
-    cart.splice(index,1);
+    cart.splice(e.target.dataset.index, 1);
     saveCart(cart);
   }
 });
 
 // ====== GOOGLE SIGN-IN ======
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
-const auth = window.auth; // используем auth из index.html
-const provider = new GoogleAuthProvider();
-const googleBtn = document.getElementById("googleSignIn");
-
-googleBtn.addEventListener("click", ()=>{
-  signInWithPopup(auth, provider)
-    .then(result=>{
-      const user = result.user;
-      alert(`Привет, ${user.displayName}!`);
-      console.log("Пользователь вошёл через Google:", user);
-    })
-    .catch(error=>{
-      console.error("Ошибка входа через Google:", error);
-      alert("Ошибка при входе через Google!");
-    });
-});
 const googleBtn = document.getElementById("googleSignIn");
 
 if (googleBtn) {
   googleBtn.addEventListener("click", () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        alert(`Привет, ${user.displayName}!`);
-        console.log("Google user:", user);
+      .then(res => {
+        alert(`Привет, ${res.user.displayName}!`);
+        console.log("Google user:", res.user);
       })
-      .catch((error) => {
-        console.error("Google Sign-In error:", error.code, error.message);
-        alert(error.message);
+      .catch(err => {
+        console.error("Auth error:", err.code, err.message);
+        alert(err.message);
       });
   });
 }
 
-// ====== INITIALIZE ======
+// ====== INIT ======
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
-
-

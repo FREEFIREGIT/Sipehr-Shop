@@ -6,7 +6,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase
 // ⚡ Настройки Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
-  authDomain: "sipehr-shop.firebaseapp.com",
+  authDomain: "sipehr-shop.firebaseapp.com", // ⚠ не GitHub Pages
   projectId: "sipehr-shop",
   storageBucket: "sipehr-shop.firebasestorage.app",
   messagingSenderId: "315068554355",
@@ -17,7 +17,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Сделаем доступным для других скриптов
 window.db = db;
 window.auth = auth;
 console.log("🔥 Firebase подключён");
@@ -58,6 +57,7 @@ function updateCartCounter() {
 
 // ====== FAVORITES LOGIC ======
 function toggleFavorite(id) {
+  id = Number(id); // ⚡ важно привести к числу
   const favs = getFavorites();
   const index = favs.indexOf(id);
   if (index > -1) favs.splice(index, 1);
@@ -65,11 +65,13 @@ function toggleFavorite(id) {
   saveFavorites(favs);
 }
 
-// ====== CART DROPDOWN ======
+// ====== RENDER CART DROPDOWN ======
+const cartDropdown = document.querySelector(".dropdown-cart");
+
 function renderCartDropdown() {
   const list = document.querySelector(".cart-dropdown .cart-list");
   const totalEl = document.querySelector(".cart-dropdown .total-price");
-  if (!list) return;
+  if (!list || !totalEl) return;
 
   const cart = getCart();
   list.innerHTML = "";
@@ -89,6 +91,12 @@ function renderCartDropdown() {
   });
 
   totalEl.textContent = total + " c";
+
+  // Добавляем кнопку "Оплатить" только если есть товары
+  const checkoutBtn = document.querySelector(".checkout-btn");
+  if (checkoutBtn) {
+    checkoutBtn.style.display = cart.length > 0 ? "block" : "none";
+  }
 }
 
 // ====== FAVORITES COUNTER ======
@@ -97,49 +105,7 @@ function updateFavCounter() {
   if (counter) counter.textContent = getFavorites().length;
 }
 
-// ====== GOOGLE SIGN-IN С АВАТАРКОЙ ======
-const googleSignInDiv = document.querySelector(".google-signin");
-
-function updateGoogleButton(user) {
-  if (user) {
-    googleSignInDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
-    `;
-  } else {
-    googleSignInDiv.innerHTML = `
-      <button id="googleSignIn">
-        <img src="google-icon.png" alt="Google" class="google-icon">
-        Войти через Google
-      </button>
-    `;
-    // Повторно привязываем событие
-    const googleBtn = document.getElementById("googleSignIn");
-    if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
-  }
-}
-
-// Функция входа через Google
-function signInWithGoogle() {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(res => {
-      const user = res.user;
-      console.log("Google user:", user);
-      updateGoogleButton(user);
-      alert(`Привет, ${user.displayName}!`);
-    })
-    .catch(err => {
-      console.error("Google Sign-In error:", err.code, err.message);
-      alert(err.message);
-    });
-}
-
-// Проверка при загрузке страницы
-auth.onAuthStateChanged(user => {
-  updateGoogleButton(user);
-});
-
-// ====== EVENTS ======
+// ====== EVENT LISTENERS ======
 document.addEventListener("click", e => {
   const btn = e.target.closest("[data-add-to-cart]");
   if (btn) addToCart(btn.dataset.addToCart);
@@ -155,6 +121,60 @@ document.addEventListener("click", e => {
     cart.splice(e.target.dataset.index, 1);
     saveCart(cart);
   }
+
+  if (e.target.classList.contains("checkout-btn")) {
+    alert("Оплата успешна! 🎉");
+    saveCart([]); // очищаем корзину
+  }
+});
+
+// ====== GOOGLE SIGN-IN ======
+const googleSignInDiv = document.querySelector(".google-signin");
+
+function updateGoogleButton(user) {
+  if (user) {
+    // Пользователь вошёл — показываем аватарку
+    googleSignInDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
+    `;
+  } else {
+    // Нет пользователя — показываем кнопку входа
+    googleSignInDiv.innerHTML = `
+      <button id="googleSignIn">
+        <img src="google-icon.png" alt="Google" class="google-icon">
+        Войти через Google
+      </button>
+    `;
+    const googleBtn = document.getElementById("googleSignIn");
+    if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
+  }
+}
+
+// Вход через Google
+function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(res => {
+      const user = res.user;
+      console.log("Google user:", user);
+      updateGoogleButton(user);
+      alert(`Привет, ${user.displayName}!`);
+    })
+    .catch(err => {
+      console.error("Google Sign-In error:", err.code, err.message);
+      alert(err.message);
+    });
+}
+
+// Проверяем состояние при загрузке
+auth.onAuthStateChanged(user => {
+  updateGoogleButton(user);
+
+  // Активируем избранное по сохранённым данным
+  getFavorites().forEach(id => {
+    const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
+    if (btn) btn.classList.add("active");
+  });
 });
 
 // ====== INIT ======

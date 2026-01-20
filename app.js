@@ -97,9 +97,26 @@ googleBtn.addEventListener("click", ()=>{
       alert("Ошибка при входе через Google!");
     });
 });
+const googleBtn = document.getElementById("googleSignIn");
+
+if (googleBtn) {
+  googleBtn.addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        alert(`Привет, ${user.displayName}!`);
+        console.log("Google user:", user);
+      })
+      .catch((error) => {
+        console.error("Google Sign-In error:", error.code, error.message);
+        alert(error.message);
+      });
+  });
+}
 
 // ====== INITIALIZE ======
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
+
 

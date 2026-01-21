@@ -43,6 +43,32 @@ function saveFavorites(favs) {
   updateFavCounter();
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const favs = getFavorites();
+  favs.forEach(id => {
+    const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
+    if (btn) btn.classList.add("active");
+  });
+});
+
+function syncFavoriteButton(btn) {
+  const id = Number(btn.dataset.id);
+  const favs = getFavorites();
+
+  if (favs.includes(id)) {
+    btn.classList.add("active");
+  } else {
+    btn.classList.remove("active");
+  }
+}
+
+function syncAllFavoriteButtons() {
+  document.querySelectorAll(".fav-btn").forEach(btn => {
+    syncFavoriteButton(btn);
+  });
+}
+
+
 // ====== CART LOGIC ======
 function addToCart(id) {
   const cart = getCart();
@@ -181,3 +207,4 @@ auth.onAuthStateChanged(user => {
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
+

@@ -6,7 +6,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase
 // ⚡ Настройки Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
-  authDomain: "sipehr-shop.firebaseapp.com", // ⚠ не GitHub Pages
+  authDomain: "sipehr-shop.firebaseapp.com",
   projectId: "sipehr-shop",
   storageBucket: "sipehr-shop.firebasestorage.app",
   messagingSenderId: "315068554355",
@@ -43,31 +43,16 @@ function saveFavorites(favs) {
   updateFavCounter();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const favs = getFavorites();
-  favs.forEach(id => {
-    const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
-    if (btn) btn.classList.add("active");
-  });
-});
-
+// ====== SYNC FAVORITES ======
 function syncFavoriteButton(btn) {
   const id = Number(btn.dataset.id);
   const favs = getFavorites();
-
-  if (favs.includes(id)) {
-    btn.classList.add("active");
-  } else {
-    btn.classList.remove("active");
-  }
+  btn.classList.toggle("active", favs.includes(id));
 }
 
 function syncAllFavoriteButtons() {
-  document.querySelectorAll(".fav-btn").forEach(btn => {
-    syncFavoriteButton(btn);
-  });
+  document.querySelectorAll(".fav-btn").forEach(syncFavoriteButton);
 }
-
 
 // ====== CART LOGIC ======
 function addToCart(id) {
@@ -83,17 +68,16 @@ function updateCartCounter() {
 
 // ====== FAVORITES LOGIC ======
 function toggleFavorite(id) {
-  id = Number(id); // ⚡ важно привести к числу
+  id = Number(id);
   const favs = getFavorites();
   const index = favs.indexOf(id);
   if (index > -1) favs.splice(index, 1);
   else favs.push(id);
   saveFavorites(favs);
+  syncAllFavoriteButtons();
 }
 
 // ====== RENDER CART DROPDOWN ======
-const cartDropdown = document.querySelector(".dropdown-cart");
-
 function renderCartDropdown() {
   const list = document.querySelector(".cart-dropdown .cart-list");
   const totalEl = document.querySelector(".cart-dropdown .total-price");
@@ -118,11 +102,8 @@ function renderCartDropdown() {
 
   totalEl.textContent = total + " c";
 
-  // Добавляем кнопку "Оплатить" только если есть товары
   const checkoutBtn = document.querySelector(".checkout-btn");
-  if (checkoutBtn) {
-    checkoutBtn.style.display = cart.length > 0 ? "block" : "none";
-  }
+  if (checkoutBtn) checkoutBtn.style.display = cart.length > 0 ? "block" : "none";
 }
 
 // ====== FAVORITES COUNTER ======
@@ -131,40 +112,15 @@ function updateFavCounter() {
   if (counter) counter.textContent = getFavorites().length;
 }
 
-// ====== EVENT LISTENERS ======
-document.addEventListener("click", e => {
-  const btn = e.target.closest("[data-add-to-cart]");
-  if (btn) addToCart(btn.dataset.addToCart);
-
-  const favBtn = e.target.closest(".fav-btn");
-  if (favBtn) {
-    toggleFavorite(favBtn.dataset.id);
-    favBtn.classList.toggle("active");
-  }
-
-  if (e.target.classList.contains("cart-remove")) {
-    const cart = getCart();
-    cart.splice(e.target.dataset.index, 1);
-    saveCart(cart);
-  }
-
-  if (e.target.classList.contains("checkout-btn")) {
-    alert("Оплата успешна! 🎉");
-    saveCart([]); // очищаем корзину
-  }
-});
-
 // ====== GOOGLE SIGN-IN ======
 const googleSignInDiv = document.querySelector(".google-signin");
 
 function updateGoogleButton(user) {
   if (user) {
-    // Пользователь вошёл — показываем аватарку
     googleSignInDiv.innerHTML = `
       <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
     `;
   } else {
-    // Нет пользователя — показываем кнопку входа
     googleSignInDiv.innerHTML = `
       <button id="googleSignIn">
         <img src="google-icon.png" alt="Google" class="google-icon">
@@ -176,7 +132,6 @@ function updateGoogleButton(user) {
   }
 }
 
-// Вход через Google
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
@@ -187,19 +142,60 @@ function signInWithGoogle() {
       alert(`Привет, ${user.displayName}!`);
     })
     .catch(err => {
-      console.error("Google Sign-In error:", err.code, err.message);
+      console.error("Google Sign-In error:", err);
       alert(err.message);
     });
 }
 
-// Проверяем состояние при загрузке
 auth.onAuthStateChanged(user => {
   updateGoogleButton(user);
-
-  // Активируем избранное по сохранённым данным
   getFavorites().forEach(id => {
     const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
     if (btn) btn.classList.add("active");
+  });
+});
+
+// ====== HIDE SKELETON ======
+function hideSkeleton() {
+  document.querySelectorAll(".skeleton").forEach(el => {
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 400);
+  });
+}
+
+// ====== EVENT LISTENERS ======
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-add-to-cart]");
+  if (btn) addToCart(btn.dataset.addToCart);
+
+  const favBtn = e.target.closest(".fav-btn");
+  if (favBtn) toggleFavorite(favBtn.dataset.id);
+
+  if (e.target.classList.contains("cart-remove")) {
+    const cart = getCart();
+    cart.splice(e.target.dataset.index, 1);
+    saveCart(cart);
+  }
+
+  if (e.target.classList.contains("checkout-btn")) {
+    alert("Оплата успешна! 🎉");
+    saveCart([]);
+  }
+});
+
+// ====== DARK MODE ======
+window.addEventListener("DOMContentLoaded", () => {
+  const darkToggle = document.getElementById("darkToggle");
+  if (!darkToggle) return;
+
+  // включаем сохранённый режим
+  if(localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark-mode");
+  }
+
+  darkToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
   });
 });
 
@@ -208,30 +204,4 @@ updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
 hideSkeleton();
-
-// ====== HIDE SKELETON (FADE OUT) ======
-function hideSkeleton() {
-  document.querySelectorAll(".skeleton").forEach(el => {
-    el.classList.add("hide");             // плавный fade-out
-    setTimeout(() => el.remove(), 400);   // удаляем после анимации
-  });
-}
-
-// ====== DARK MODE ======
-window.addEventListener("load", () => {
-  const darkToggle = document.getElementById("darkToggle");
-  if (!darkToggle) return;
-
-  darkToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-  });
-
-  // Включаем dark mode при загрузке
-  if(localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
-});
-
-
-
+syncAllFavoriteButtons();

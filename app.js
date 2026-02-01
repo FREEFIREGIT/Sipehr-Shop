@@ -217,15 +217,19 @@ function hideSkeleton() {
   });
 }
 
-const darkToggle = document.getElementById("darkToggle");
+// ====== DARK MODE ======
+document.addEventListener("DOMContentLoaded", () => {
+  const darkToggle = document.getElementById("darkToggle");
+  if (!darkToggle) return;
 
-// Переключение темы
-darkToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+  // Переключение темы
+  darkToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+  });
+
+  // Включаем dark mode при загрузке страницы, если было сохранено
+  if(localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark-mode");
+  }
 });
-
-// Включаем dark mode при загрузке страницы, если было сохранено
-if(localStorage.getItem("darkMode") === "true") {
-  document.body.classList.add("dark-mode");
-}

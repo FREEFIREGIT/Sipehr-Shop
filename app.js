@@ -218,7 +218,7 @@ function hideSkeleton() {
 }
 
 // ====== DARK MODE ======
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   const darkToggle = document.getElementById("darkToggle");
   if (!darkToggle) return;
 
@@ -227,9 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
   });
 
+  // Включаем dark mode при загрузке
   if(localStorage.getItem("darkMode") === "true") {
     document.body.classList.add("dark-mode");
   }
 });
+
+});
+
 
 

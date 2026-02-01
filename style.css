@@ -372,3 +372,15 @@ body {
     background-position: -200% 0;
   }
 }
+
+/* ====== SKELETON FADE OUT ====== */
+.skeleton {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.skeleton.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+

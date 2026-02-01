@@ -217,18 +217,15 @@ function hideSkeleton() {
   });
 }
 
-// ====== DARK MODE ======
 const darkToggle = document.getElementById("darkToggle");
+
+// Переключение темы
 darkToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  if(document.body.classList.contains("dark-mode")) {
-    localStorage.setItem("darkMode", "true");
-  } else {
-    localStorage.removeItem("darkMode");
-  }
+  localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
 });
 
-// Включаем dark mode при загрузке
+// Включаем dark mode при загрузке страницы, если было сохранено
 if(localStorage.getItem("darkMode") === "true") {
   document.body.classList.add("dark-mode");
-}  
+}

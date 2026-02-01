@@ -208,3 +208,10 @@ updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
 
+// ====== SKELETON LOADING ======
+window.addEventListener("load", () => {
+  document.querySelectorAll(".skeleton").forEach(el => {
+    el.style.display = "none";
+  });
+});
+

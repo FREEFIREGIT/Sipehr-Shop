@@ -398,3 +398,66 @@ body.dark-mode .card {
 body.dark-mode header {
   background-color: #1a1a1a;
 }
+
+  /* Контейнер ... */
+  .menu-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  /* Основная кнопка */
+  .menu-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+  }
+
+  .menu-button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Скрытое меню */
+  .menu-items {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* Активное меню */
+  .menu-items.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Ссылки в меню */
+  .menu-items a {
+    display: block;
+    margin: 5px 0;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .menu-items a:hover {
+    background-color: #1e7e34;
+  }

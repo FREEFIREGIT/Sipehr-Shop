@@ -384,3 +384,17 @@ body {
   pointer-events: none;
 }
 
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode .card {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+/* Можно добавить для header, кнопок и т.д. */
+body.dark-mode header {
+  background-color: #1a1a1a;
+}

@@ -233,7 +233,5 @@ window.addEventListener("load", () => {
   }
 });
 
-});
-
 
 

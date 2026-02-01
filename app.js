@@ -205,3 +205,13 @@ updateFavCounter();
 renderCartDropdown();
 hideSkeleton();
 syncAllFavoriteButtons();
+
+// ====== ТРЁХТОЧЕЧНОЕ МЕНЮ ======
+const mainButton = document.getElementById('mainButton');
+const menuItems = document.getElementById('menuItems');
+
+if (mainButton && menuItems) {
+  mainButton.addEventListener('click', () => {
+    menuItems.classList.toggle('active');
+  });
+}

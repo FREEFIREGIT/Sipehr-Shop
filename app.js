@@ -207,11 +207,14 @@ auth.onAuthStateChanged(user => {
 updateCartCounter();
 updateFavCounter();
 renderCartDropdown();
+hideSkeleton();
 
-// ====== SKELETON LOADING ======
-window.addEventListener("load", () => {
+// ====== HIDE SKELETON (FADE OUT) ======
+function hideSkeleton() {
   document.querySelectorAll(".skeleton").forEach(el => {
-    el.style.display = "none";
+    el.classList.add("hide");             // плавный fade-out
+    setTimeout(() => el.remove(), 400);   // удаляем после анимации
   });
-});
+}
+
 

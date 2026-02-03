@@ -112,12 +112,11 @@ function updateFavCounter() {
   if (counter) counter.textContent = getFavorites().length;
 }
      // ====== Входы в аккаунт ====== //
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } 
-from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 const auth = getAuth();
 
-// ====== GOOGLE SIGN-IN ======
+// ====== GOOGLE SIGN‑IN ======
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
@@ -125,7 +124,6 @@ function signInWithGoogle() {
       const user = res.user;
       console.log("Google user:", user);
       alert(`Привет, ${user.displayName}!`);
-      // тут можно показать аватар на сайте, если хочешь
     })
     .catch(err => {
       console.error("Google Sign-In error:", err);
@@ -133,18 +131,17 @@ function signInWithGoogle() {
     });
 }
 
-// ====== FACEBOOK SIGN-IN ======
+// ====== FACEBOOK SIGN‑IN ======
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
-  provider.addScope('email');          // запросим email
-  provider.addScope('public_profile'); // запросим имя и аватар
+  provider.addScope('email');          // запросить email
+  provider.addScope('public_profile'); // имя и аватар
 
   signInWithPopup(auth, provider)
     .then(res => {
       const user = res.user;
       console.log("Facebook user:", user);
       alert(`Привет, ${user.displayName}!`);
-      // тут можно показать аватар на сайте, если хочешь
     })
     .catch(err => {
       console.error("Facebook Sign-In error:", err);
@@ -152,7 +149,7 @@ function signInWithFacebook() {
     });
 }
 
-// ====== СЛУШАТЕЛИ ДЛЯ КНОПОК ======
+// ====== ПОДКЛЮЧАЕМ КНОПКИ ======
 document.getElementById("googleSignIn").addEventListener("click", signInWithGoogle);
 document.getElementById("facebookSignIn").addEventListener("click", signInWithFacebook);
 
@@ -217,5 +214,6 @@ if (mainButton && menuItems) {
     menuItems.classList.toggle('active');
   });
 }
+
 
 

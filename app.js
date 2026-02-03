@@ -33,7 +33,7 @@ const products = {
   3: { id: 3, name: "EarPods Type-C", price: 299, img: "earpods.jpg" }
 };
 
-// ====== LOCALSTORAGE CART ======
+// ====== LOCALSTORAGE CART & FAVORITES ======
 function getCart() { return JSON.parse(localStorage.getItem("cart")) || []; }
 function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -41,14 +41,22 @@ function saveCart(cart) {
   renderCartDropdown();
 }
 
-// ====== LOCALSTORAGE FAVORITES ======
 function getFavorites() { return JSON.parse(localStorage.getItem("favorites")) || []; }
 function saveFavorites(favs) {
   localStorage.setItem("favorites", JSON.stringify(favs));
   updateFavCounter();
 }
 
-// ====== SYNC FAVORITES ======
+function toggleFavorite(id) {
+  id = Number(id);
+  const favs = getFavorites();
+  const index = favs.indexOf(id);
+  if (index > -1) favs.splice(index, 1);
+  else favs.push(id);
+  saveFavorites(favs);
+  syncAllFavoriteButtons();
+}
+
 function syncFavoriteButton(btn) {
   const id = Number(btn.dataset.id);
   const favs = getFavorites();
@@ -67,17 +75,6 @@ function addToCart(id) {
 function updateCartCounter() {
   const counter = document.querySelector(".cart-counter");
   if (counter) counter.textContent = getCart().length;
-}
-
-// ====== FAVORITES LOGIC ======
-function toggleFavorite(id) {
-  id = Number(id);
-  const favs = getFavorites();
-  const index = favs.indexOf(id);
-  if (index > -1) favs.splice(index, 1);
-  else favs.push(id);
-  saveFavorites(favs);
-  syncAllFavoriteButtons();
 }
 
 // ====== RENDER CART DROPDOWN ======
@@ -115,40 +112,24 @@ function updateFavCounter() {
   if (counter) counter.textContent = getFavorites().length;
 }
 
-// ====== GOOGLE SIGN-IN ======
+// ====== GOOGLE + FACEBOOK SIGN-IN ======
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
-    .then(res => {
-      const user = res.user;
-      console.log("Google user:", user);
-      alert(`Привет, ${user.displayName}!`);
-    })
-    .catch(err => {
-      console.error("Google Sign-In error:", err);
-      alert(err.message);
-    });
+    .then(res => alert(`Привет, ${res.user.displayName}!`))
+    .catch(err => console.error("Google Sign-In error:", err));
 }
 
-// ====== FACEBOOK SIGN-IN ======
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
   provider.addScope('email');
   provider.addScope('public_profile');
-
   signInWithPopup(auth, provider)
-    .then(res => {
-      const user = res.user;
-      console.log("Facebook user:", user);
-      alert(`Привет, ${user.displayName}!`);
-    })
-    .catch(err => {
-      console.error("Facebook Sign-In error:", err);
-      alert(err.message);
-    });
+    .then(res => alert(`Привет, ${res.user.displayName}!`))
+    .catch(err => console.error("Facebook Sign-In error:", err));
 }
 
-// ====== ИНИЦИАЛИЗАЦИЯ КНОПОК ======
+// ====== КНОПКИ И ОТОБРАЖЕНИЕ ПОЛЬЗОВАТЕЛЯ ======
 document.addEventListener("DOMContentLoaded", () => {
   const googleBtn = document.getElementById("googleSignIn");
   const fbBtn = document.getElementById("facebookSignIn");
@@ -157,10 +138,20 @@ document.addEventListener("DOMContentLoaded", () => {
   if (fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
 });
 
-// ====== СЛУШАТЕЛЬ СОСТОЯНИЯ АВТОРИЗАЦИИ ======
+// Показываем имя и аватар рядом с кнопками
 auth.onAuthStateChanged(user => {
-  console.log("Auth state changed:", user);
-  // тут можно добавить отображение имени и аватара рядом с кнопкой
+  if (user) {
+    const googleDiv = document.querySelector(".google-signin");
+    if (googleDiv) googleDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="user-avatar">
+      <span>${user.displayName}</span>
+    `;
+    const fbDiv = document.querySelector(".facebook-signin");
+    if (fbDiv) fbDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="user-avatar">
+      <span>${user.displayName}</span>
+    `;
+  }
 });
 
 // ====== HIDE SKELETON ======
@@ -195,11 +186,7 @@ document.addEventListener("click", e => {
 window.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById("darkToggle");
   if (!darkToggle) return;
-
-  if(localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
-
+  if(localStorage.getItem("darkMode") === "true") document.body.classList.add("dark-mode");
   darkToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
     localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
@@ -216,10 +203,6 @@ syncAllFavoriteButtons();
 // ====== ТРЁХТОЧЕЧНОЕ МЕНЮ ======
 const mainButton = document.getElementById('mainButton');
 const menuItems = document.getElementById('menuItems');
-
 if (mainButton && menuItems) {
-  mainButton.addEventListener('click', () => {
-    menuItems.classList.toggle('active');
-  });
+  mainButton.addEventListener('click', () => menuItems.classList.toggle('active'));
 }
-

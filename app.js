@@ -1,11 +1,16 @@
 // ====== FIREBASE ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  FacebookAuthProvider, 
+  signInWithPopup 
+} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
 // ⚡ Настройки Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAqQc7JS5eyDydXf3jJSlp6Ca_eWsd0O7g",
+  apiKey: "AIzaSyQ...",
   authDomain: "sipehr-shop.firebaseapp.com",
   projectId: "sipehr-shop",
   storageBucket: "sipehr-shop.firebasestorage.app",
@@ -49,7 +54,6 @@ function syncFavoriteButton(btn) {
   const favs = getFavorites();
   btn.classList.toggle("active", favs.includes(id));
 }
-
 function syncAllFavoriteButtons() {
   document.querySelectorAll(".fav-btn").forEach(syncFavoriteButton);
 }
@@ -60,7 +64,6 @@ function addToCart(id) {
   cart.push(products[id]);
   saveCart(cart);
 }
-
 function updateCartCounter() {
   const counter = document.querySelector(".cart-counter");
   if (counter) counter.textContent = getCart().length;
@@ -111,12 +114,8 @@ function updateFavCounter() {
   const counter = document.querySelector(".fav-counter");
   if (counter) counter.textContent = getFavorites().length;
 }
-     // ====== Входы в аккаунт ====== //
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-const auth = getAuth();
-
-// ====== GOOGLE SIGN‑IN ======
+// ====== GOOGLE SIGN-IN ======
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
@@ -131,11 +130,11 @@ function signInWithGoogle() {
     });
 }
 
-// ====== FACEBOOK SIGN‑IN ======
+// ====== FACEBOOK SIGN-IN ======
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
-  provider.addScope('email');          // запросить email
-  provider.addScope('public_profile'); // имя и аватар
+  provider.addScope('email');
+  provider.addScope('public_profile');
 
   signInWithPopup(auth, provider)
     .then(res => {
@@ -149,10 +148,20 @@ function signInWithFacebook() {
     });
 }
 
-// ====== ПОДКЛЮЧАЕМ КНОПКИ ======
-document.getElementById("googleSignIn").addEventListener("click", signInWithGoogle);
-document.getElementById("facebookSignIn").addEventListener("click", signInWithFacebook);
+// ====== ИНИЦИАЛИЗАЦИЯ КНОПОК ======
+document.addEventListener("DOMContentLoaded", () => {
+  const googleBtn = document.getElementById("googleSignIn");
+  const fbBtn = document.getElementById("facebookSignIn");
 
+  if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
+  if (fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
+});
+
+// ====== СЛУШАТЕЛЬ СОСТОЯНИЯ АВТОРИЗАЦИИ ======
+auth.onAuthStateChanged(user => {
+  console.log("Auth state changed:", user);
+  // тут можно добавить отображение имени и аватара рядом с кнопкой
+});
 
 // ====== HIDE SKELETON ======
 function hideSkeleton() {
@@ -187,7 +196,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById("darkToggle");
   if (!darkToggle) return;
 
-  // включаем сохранённый режим
   if(localStorage.getItem("darkMode") === "true") {
     document.body.classList.add("dark-mode");
   }
@@ -214,6 +222,4 @@ if (mainButton && menuItems) {
     menuItems.classList.toggle('active');
   });
 }
-
-
 

@@ -111,35 +111,21 @@ function updateFavCounter() {
   const counter = document.querySelector(".fav-counter");
   if (counter) counter.textContent = getFavorites().length;
 }
+     // ====== Входы в аккаунт ====== //
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } 
+from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+const auth = getAuth();
 
 // ====== GOOGLE SIGN-IN ======
-const googleSignInDiv = document.querySelector(".google-signin");
-
-function updateGoogleButton(user) {
-  if (user) {
-    googleSignInDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="google-user-avatar" title="${user.displayName}">
-    `;
-  } else {
-    googleSignInDiv.innerHTML = `
-      <button id="googleSignIn">
-        <img src="google-icon.png" alt="Google" class="google-icon">
-        Войти через Google
-      </button>
-    `;
-    const googleBtn = document.getElementById("googleSignIn");
-    if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
-  }
-}
-
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
     .then(res => {
       const user = res.user;
       console.log("Google user:", user);
-      updateGoogleButton(user);
       alert(`Привет, ${user.displayName}!`);
+      // тут можно показать аватар на сайте, если хочешь
     })
     .catch(err => {
       console.error("Google Sign-In error:", err);
@@ -147,46 +133,18 @@ function signInWithGoogle() {
     });
 }
 
-auth.onAuthStateChanged(user => {
-  updateGoogleButton(user);
-  getFavorites().forEach(id => {
-    const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
-    if (btn) btn.classList.add("active");
-  });
-});
-
-import { FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
 // ====== FACEBOOK SIGN-IN ======
-const fbDiv = document.querySelector(".facebook-signin");
-
-function updateFacebookButton(user) {
-  if(user) {
-    fbDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="facebook-user-avatar" title="${user.displayName}">
-    `;
-  } else {
-    fbDiv.innerHTML = `
-      <button id="facebookSignIn" class="facebook-btn">
-        Войти через Facebook
-      </button>
-    `;
-    const fbBtn = document.getElementById("facebookSignIn");
-    if(fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
-  }
-}
-
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
-  provider.addScope('email'); // запросим email
+  provider.addScope('email');          // запросим email
   provider.addScope('public_profile'); // запросим имя и аватар
 
   signInWithPopup(auth, provider)
     .then(res => {
       const user = res.user;
       console.log("Facebook user:", user);
-      updateFacebookButton(user);
       alert(`Привет, ${user.displayName}!`);
+      // тут можно показать аватар на сайте, если хочешь
     })
     .catch(err => {
       console.error("Facebook Sign-In error:", err);
@@ -194,10 +152,10 @@ function signInWithFacebook() {
     });
 }
 
-// Инициализация при загрузке страницы
-auth.onAuthStateChanged(user => {
-  updateFacebookButton(user);
-});
+// ====== СЛУШАТЕЛИ ДЛЯ КНОПОК ======
+document.getElementById("googleSignIn").addEventListener("click", signInWithGoogle);
+document.getElementById("facebookSignIn").addEventListener("click", signInWithFacebook);
+
 
 // ====== HIDE SKELETON ======
 function hideSkeleton() {
@@ -259,4 +217,5 @@ if (mainButton && menuItems) {
     menuItems.classList.toggle('active');
   });
 }
+
 

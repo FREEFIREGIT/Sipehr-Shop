@@ -155,6 +155,50 @@ auth.onAuthStateChanged(user => {
   });
 });
 
+import { FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+// ====== FACEBOOK SIGN-IN ======
+const fbDiv = document.querySelector(".facebook-signin");
+
+function updateFacebookButton(user) {
+  if(user) {
+    fbDiv.innerHTML = `
+      <img src="${user.photoURL}" alt="${user.displayName}" class="facebook-user-avatar" title="${user.displayName}">
+    `;
+  } else {
+    fbDiv.innerHTML = `
+      <button id="facebookSignIn" class="facebook-btn">
+        Войти через Facebook
+      </button>
+    `;
+    const fbBtn = document.getElementById("facebookSignIn");
+    if(fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
+  }
+}
+
+function signInWithFacebook() {
+  const provider = new FacebookAuthProvider();
+  provider.addScope('email'); // запросим email
+  provider.addScope('public_profile'); // запросим имя и аватар
+
+  signInWithPopup(auth, provider)
+    .then(res => {
+      const user = res.user;
+      console.log("Facebook user:", user);
+      updateFacebookButton(user);
+      alert(`Привет, ${user.displayName}!`);
+    })
+    .catch(err => {
+      console.error("Facebook Sign-In error:", err);
+      alert(err.message);
+    });
+}
+
+// Инициализация при загрузке страницы
+auth.onAuthStateChanged(user => {
+  updateFacebookButton(user);
+});
+
 // ====== HIDE SKELETON ======
 function hideSkeleton() {
   document.querySelectorAll(".skeleton").forEach(el => {
@@ -215,3 +259,4 @@ if (mainButton && menuItems) {
     menuItems.classList.toggle('active');
   });
 }
+

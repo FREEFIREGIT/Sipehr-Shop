@@ -497,3 +497,5 @@ body.dark-mode header {
   height: 24px;
   margin-right: 10px;
 }
+.menu-items { display: none; }
+.menu-items.active { display: block; }

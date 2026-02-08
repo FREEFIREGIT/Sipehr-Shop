@@ -200,3 +200,23 @@ document.addEventListener("DOMContentLoaded", () => {
   syncAllFavoriteButtons();
   hideSkeletonAfterLoad();
 });
+
+// ================= THREE DOTS MENU =================
+document.addEventListener("DOMContentLoaded", () => {
+  const mainButton = document.getElementById("mainButton");
+  const menuItems = document.getElementById("menuItems");
+
+  if (!mainButton || !menuItems) return;
+
+  mainButton.addEventListener("click", e => {
+    e.stopPropagation();
+    menuItems.classList.toggle("active");
+  });
+
+  // закрытие при клике вне меню
+  document.addEventListener("click", e => {
+    if (!menuItems.contains(e.target) && !mainButton.contains(e.target)) {
+      menuItems.classList.remove("active");
+    }
+  });
+});

@@ -1,14 +1,15 @@
-// ====== FIREBASE ======
+// ================= FIREBASE =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  FacebookAuthProvider, 
-  signInWithPopup 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-// ⚡ Настройки Firebase
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyQ...",
   authDomain: "sipehr-shop.firebaseapp.com",
@@ -19,153 +20,121 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.db = db;
-window.auth = auth;
 console.log("🔥 Firebase подключён");
 
-// ====== PRODUCTS ======
+// ================= PRODUCTS =================
 const products = {
   1: { id: 1, name: "Buds 2 Pro", price: 1299, img: "buds.jpg" },
   2: { id: 2, name: "Headphones X", price: 899, img: "headphones.jpg" },
   3: { id: 3, name: "EarPods Type-C", price: 299, img: "earpods.jpg" }
 };
 
-// ====== LOCALSTORAGE CART & FAVORITES ======
-function getCart() { return JSON.parse(localStorage.getItem("cart")) || []; }
-function saveCart(cart) {
+// ================= CART =================
+const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
+const saveCart = cart => {
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCounter();
   renderCartDropdown();
-}
+};
 
-function getFavorites() { return JSON.parse(localStorage.getItem("favorites")) || []; }
-function saveFavorites(favs) {
-  localStorage.setItem("favorites", JSON.stringify(favs));
-  updateFavCounter();
-}
-
-function toggleFavorite(id) {
-  id = Number(id);
-  const favs = getFavorites();
-  const index = favs.indexOf(id);
-  if (index > -1) favs.splice(index, 1);
-  else favs.push(id);
-  saveFavorites(favs);
-  syncAllFavoriteButtons();
-}
-
-function syncFavoriteButton(btn) {
-  const id = Number(btn.dataset.id);
-  const favs = getFavorites();
-  btn.classList.toggle("active", favs.includes(id));
-}
-function syncAllFavoriteButtons() {
-  document.querySelectorAll(".fav-btn").forEach(syncFavoriteButton);
-}
-
-// ====== CART LOGIC ======
 function addToCart(id) {
   const cart = getCart();
   cart.push(products[id]);
   saveCart(cart);
 }
+
 function updateCartCounter() {
-  const counter = document.querySelector(".cart-counter");
-  if (counter) counter.textContent = getCart().length;
+  const el = document.querySelector(".cart-counter");
+  if (el) el.textContent = getCart().length;
 }
 
-// ====== RENDER CART DROPDOWN ======
+// ================= FAVORITES =================
+const getFavorites = () => JSON.parse(localStorage.getItem("favorites")) || [];
+const saveFavorites = favs => {
+  localStorage.setItem("favorites", JSON.stringify(favs));
+  updateFavCounter();
+};
+
+function toggleFavorite(id) {
+  id = Number(id);
+  const favs = getFavorites();
+  favs.includes(id) ? favs.splice(favs.indexOf(id), 1) : favs.push(id);
+  saveFavorites(favs);
+  syncAllFavoriteButtons();
+}
+
+function syncAllFavoriteButtons() {
+  document.querySelectorAll(".fav-btn").forEach(btn => {
+    const id = Number(btn.dataset.id);
+    btn.classList.toggle("active", getFavorites().includes(id));
+  });
+}
+
+function updateFavCounter() {
+  const el = document.querySelector(".fav-counter");
+  if (el) el.textContent = getFavorites().length;
+}
+
+// ================= CART DROPDOWN =================
 function renderCartDropdown() {
-  const list = document.querySelector(".cart-dropdown .cart-list");
-  const totalEl = document.querySelector(".cart-dropdown .total-price");
+  const list = document.querySelector(".cart-list");
+  const totalEl = document.querySelector(".total-price");
   if (!list || !totalEl) return;
 
   const cart = getCart();
   list.innerHTML = "";
   let total = 0;
 
-  cart.forEach((item, index) => {
+  cart.forEach((item, i) => {
     total += item.price;
     list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}">
-        <div class="cart-info">
+        <img src="${item.img}">
+        <div>
           <b>${item.name}</b><br>${item.price} c
         </div>
-        <button class="cart-remove" data-index="${index}">x</button>
+        <button class="cart-remove" data-index="${i}">×</button>
       </div>
     `;
   });
 
   totalEl.textContent = total + " c";
-
-  const checkoutBtn = document.querySelector(".checkout-btn");
-  if (checkoutBtn) checkoutBtn.style.display = cart.length > 0 ? "block" : "none";
 }
 
-// ====== FAVORITES COUNTER ======
-function updateFavCounter() {
-  const counter = document.querySelector(".fav-counter");
-  if (counter) counter.textContent = getFavorites().length;
-}
-
-// ====== GOOGLE + FACEBOOK SIGN-IN ======
+// ================= AUTH =================
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
-    .then(res => alert(`Привет, ${res.user.displayName}!`))
-    .catch(err => console.error("Google Sign-In error:", err));
+    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
+    .catch(err => console.error(err));
 }
 
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
-  provider.addScope('email');
-  provider.addScope('public_profile');
   signInWithPopup(auth, provider)
-    .then(res => alert(`Привет, ${res.user.displayName}!`))
-    .catch(err => console.error("Facebook Sign-In error:", err));
+    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
+    .catch(err => console.error(err));
 }
 
-// ====== КНОПКИ И ОТОБРАЖЕНИЕ ПОЛЬЗОВАТЕЛЯ ======
-document.addEventListener("DOMContentLoaded", () => {
-  const googleBtn = document.getElementById("googleSignIn");
-  const fbBtn = document.getElementById("facebookSignIn");
+// ================= USER UI =================
+onAuthStateChanged(auth, user => {
+  if (!user) return;
 
-  if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
-  if (fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
-});
-
-// Показываем имя и аватар рядом с кнопками
-auth.onAuthStateChanged(user => {
-  if (user) {
-    const googleDiv = document.querySelector(".google-signin");
-    if (googleDiv) googleDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="user-avatar">
+  document.querySelectorAll(".user-box").forEach(el => {
+    el.innerHTML = `
+      <img src="${user.photoURL}" class="user-avatar">
       <span>${user.displayName}</span>
     `;
-    const fbDiv = document.querySelector(".facebook-signin");
-    if (fbDiv) fbDiv.innerHTML = `
-      <img src="${user.photoURL}" alt="${user.displayName}" class="user-avatar">
-      <span>${user.displayName}</span>
-    `;
-  }
-});
-
-// ====== HIDE SKELETON ======
-function hideSkeleton() {
-  document.querySelectorAll(".skeleton").forEach(el => {
-    el.classList.add("hide");
-    setTimeout(() => el.remove(), 400);
   });
-}
+});
 
-// ====== EVENT LISTENERS ======
+// ================= EVENTS =================
 document.addEventListener("click", e => {
-  const btn = e.target.closest("[data-add-to-cart]");
-  if (btn) addToCart(btn.dataset.addToCart);
+  const cartBtn = e.target.closest("[data-add-to-cart]");
+  if (cartBtn) addToCart(cartBtn.dataset.addToCart);
 
   const favBtn = e.target.closest(".fav-btn");
   if (favBtn) toggleFavorite(favBtn.dataset.id);
@@ -177,32 +146,28 @@ document.addEventListener("click", e => {
   }
 
   if (e.target.classList.contains("checkout-btn")) {
-    alert("Оплата успешна! 🎉");
+    alert("Оплата успешна 🎉");
     saveCart([]);
   }
 });
 
-// ====== DARK MODE ======
-window.addEventListener("DOMContentLoaded", () => {
-  const darkToggle = document.getElementById("darkToggle");
-  if (!darkToggle) return;
-  if(localStorage.getItem("darkMode") === "true") document.body.classList.add("dark-mode");
-  darkToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-  });
+// ================= BUTTONS =================
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("googleSignIn")?.addEventListener("click", signInWithGoogle);
+  document.getElementById("facebookSignIn")?.addEventListener("click", signInWithFacebook);
+
+  updateCartCounter();
+  updateFavCounter();
+  renderCartDropdown();
+  syncAllFavoriteButtons();
 });
 
-// ====== INIT ======
-updateCartCounter();
-updateFavCounter();
-renderCartDropdown();
-hideSkeleton();
-syncAllFavoriteButtons();
-
-// ====== ТРЁХТОЧЕЧНОЕ МЕНЮ ======
-const mainButton = document.getElementById('mainButton');
-const menuItems = document.getElementById('menuItems');
-if (mainButton && menuItems) {
-  mainButton.addEventListener('click', () => menuItems.classList.toggle('active'));
+// ================= DARK MODE =================
+const darkToggle = document.getElementById("darkToggle");
+if (darkToggle) {
+  if (localStorage.getItem("dark") === "1") document.body.classList.add("dark-mode");
+  darkToggle.onclick = () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark", document.body.classList.contains("dark-mode") ? "1" : "0");
+  };
 }

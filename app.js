@@ -3,9 +3,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithPopup,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -112,23 +112,23 @@ function signInWithGoogle() {
     .catch(err => console.error(err));
 }
 
-function signInWithFacebook() {
-  const provider = new FacebookAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
-    .catch(err => console.error(err));
-}
-
 // ================= USER UI =================
 onAuthStateChanged(auth, user => {
-  if (!user) return;
+  const userBox = document.querySelector(".user-box");
+  if (!userBox) return;
 
-  document.querySelectorAll(".user-box").forEach(el => {
-    el.innerHTML = `
+  if (user) {
+    userBox.innerHTML = `
       <img src="${user.photoURL}" class="user-avatar">
       <span>${user.displayName}</span>
+      <button id="logoutBtn" class="logout-btn">Выйти</button>
     `;
-  });
+    document.getElementById("logoutBtn").onclick = () =>
+      signOut(auth).then(() => location.reload());
+  } else {
+    userBox.innerHTML = `<button id="googleSignIn">Войти через Google</button>`;
+    document.getElementById("googleSignIn").onclick = signInWithGoogle;
+  }
 });
 
 // ================= EVENTS =================
@@ -151,23 +151,52 @@ document.addEventListener("click", e => {
   }
 });
 
-// ================= BUTTONS =================
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("googleSignIn")?.addEventListener("click", signInWithGoogle);
-  document.getElementById("facebookSignIn")?.addEventListener("click", signInWithFacebook);
+// ================= SKELETON LOADER =================
+function hideSkeletonAfterLoad() {
+  const images = document.images;
+  let loaded = 0;
+  if (images.length === 0) removeSkeleton();
 
-  updateCartCounter();
-  updateFavCounter();
-  renderCartDropdown();
-  syncAllFavoriteButtons();
-});
+  [...images].forEach(img => {
+    if (img.complete) {
+      loaded++;
+      if (loaded === images.length) removeSkeleton();
+    } else {
+      img.onload = img.onerror = () => {
+        loaded++;
+        if (loaded === images.length) removeSkeleton();
+      };
+    }
+  });
+}
+
+function removeSkeleton() {
+  document.querySelectorAll(".skeleton").forEach(el => {
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 400);
+  });
+}
 
 // ================= DARK MODE =================
 const darkToggle = document.getElementById("darkToggle");
 if (darkToggle) {
-  if (localStorage.getItem("dark") === "1") document.body.classList.add("dark-mode");
+  if (localStorage.getItem("dark") === "1")
+    document.body.classList.add("dark-mode");
+
   darkToggle.onclick = () => {
     document.body.classList.toggle("dark-mode");
-    localStorage.setItem("dark", document.body.classList.contains("dark-mode") ? "1" : "0");
+    localStorage.setItem(
+      "dark",
+      document.body.classList.contains("dark-mode") ? "1" : "0"
+    );
   };
 }
+
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartCounter();
+  updateFavCounter();
+  renderCartDropdown();
+  syncAllFavoriteButtons();
+  hideSkeletonAfterLoad();
+});

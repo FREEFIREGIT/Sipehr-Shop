@@ -192,15 +192,6 @@ if (darkToggle) {
   };
 }
 
-// ================= INIT =================
-document.addEventListener("DOMContentLoaded", () => {
-  updateCartCounter();
-  updateFavCounter();
-  renderCartDropdown();
-  syncAllFavoriteButtons();
-  hideSkeletonAfterLoad();
-});
-
 // ================= THREE DOTS MENU =================
 document.addEventListener("DOMContentLoaded", () => {
   const mainButton = document.getElementById("mainButton");
@@ -220,3 +211,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartCounter();
+  updateFavCounter();
+  renderCartDropdown();
+  syncAllFavoriteButtons();
+  hideSkeletonAfterLoad();
+});
+

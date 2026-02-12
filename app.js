@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
   signOut
@@ -112,8 +113,15 @@ function signInWithGoogle() {
     .catch(err => console.error(err));
 }
 
+function signInWithFacebook() {
+  const provider = new FacebookAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
+    .catch(err => console.error(err));
+}
+
 // ================= USER UI =================
-onAuthStateChanged(auth, user => {
+function updateUserUI(user) {
   const userBox = document.querySelector(".user-box");
   if (!userBox) return;
 
@@ -126,10 +134,16 @@ onAuthStateChanged(auth, user => {
     document.getElementById("logoutBtn").onclick = () =>
       signOut(auth).then(() => location.reload());
   } else {
-    userBox.innerHTML = `<button id="googleSignIn">Войти через Google</button>`;
+    userBox.innerHTML = `
+      <button id="googleSignIn">Войти через Google</button>
+      <button id="facebookSignIn">Войти через Facebook</button>
+    `;
     document.getElementById("googleSignIn").onclick = signInWithGoogle;
+    document.getElementById("facebookSignIn").onclick = signInWithFacebook;
   }
-});
+}
+
+onAuthStateChanged(auth, updateUserUI);
 
 // ================= EVENTS =================
 document.addEventListener("click", e => {
@@ -204,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menuItems.classList.toggle("active");
   });
 
-  // закрытие при клике вне меню
   document.addEventListener("click", e => {
     if (!menuItems.contains(e.target) && !mainButton.contains(e.target)) {
       menuItems.classList.remove("active");
@@ -220,4 +233,3 @@ document.addEventListener("DOMContentLoaded", () => {
   syncAllFavoriteButtons();
   hideSkeletonAfterLoad();
 });
-

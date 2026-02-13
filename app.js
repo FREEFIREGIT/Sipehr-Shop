@@ -6,7 +6,6 @@ import {
   getAuth,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   onAuthStateChanged,
@@ -120,11 +119,11 @@ function signInWithFacebook() {
   signInWithRedirect(auth, provider);
 }
 
-// Обработка результата после редиректа
+// Обработка результата редиректа после входа
 getRedirectResult(auth)
   .then(result => {
-    if (result.user) {
-      alert(`👋 Привет, ${result.user.displayName}`);
+    if (result && result.user) {
+      updateUserUI(result.user);
     }
   })
   .catch(err => console.error(err));
@@ -149,7 +148,6 @@ function updateUserUI(user) {
       <button id="facebookSignIn">Войти через Facebook</button>
     `;
 
-    // Навешиваем обработчики через addEventListener после вставки
     const googleBtn = document.getElementById("googleSignIn");
     const fbBtn = document.getElementById("facebookSignIn");
     if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);

@@ -1,4 +1,5 @@
 console.log("APP JS LOADED");
+
 // ================= FIREBASE =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
@@ -139,8 +140,13 @@ function updateUserUI(user) {
       <button id="googleSignIn">Войти через Google</button>
       <button id="facebookSignIn">Войти через Facebook</button>
     `;
-    document.getElementById("googleSignIn").onclick = signInWithGoogle;
-    document.getElementById("facebookSignIn").onclick = signInWithFacebook;
+    // Используем setTimeout, чтобы гарантировать, что кнопки появились в DOM
+    setTimeout(() => {
+      const googleBtn = document.getElementById("googleSignIn");
+      const fbBtn = document.getElementById("facebookSignIn");
+      if (googleBtn) googleBtn.onclick = signInWithGoogle;
+      if (fbBtn) fbBtn.onclick = signInWithFacebook;
+    }, 10);
   }
 }
 
@@ -234,4 +240,3 @@ document.addEventListener("DOMContentLoaded", () => {
   syncAllFavoriteButtons();
   hideSkeletonAfterLoad();
 });
-

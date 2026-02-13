@@ -1,3 +1,4 @@
+console.log("APP JS LOADED");
 // ================= FIREBASE =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
@@ -233,3 +234,4 @@ document.addEventListener("DOMContentLoaded", () => {
   syncAllFavoriteButtons();
   hideSkeletonAfterLoad();
 });
+

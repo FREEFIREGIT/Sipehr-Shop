@@ -7,6 +7,8 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
@@ -110,17 +112,22 @@ function renderCartDropdown() {
 // ================= AUTH =================
 function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
-    .catch(err => console.error(err));
+  signInWithRedirect(auth, provider);
 }
 
 function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(res => alert(`👋 Привет, ${res.user.displayName}`))
-    .catch(err => console.error(err));
+  signInWithRedirect(auth, provider);
 }
+
+// Обработка результата после редиректа
+getRedirectResult(auth)
+  .then(result => {
+    if (result.user) {
+      alert(`👋 Привет, ${result.user.displayName}`);
+    }
+  })
+  .catch(err => console.error(err));
 
 // ================= USER UI =================
 function updateUserUI(user) {
@@ -133,20 +140,20 @@ function updateUserUI(user) {
       <span>${user.displayName}</span>
       <button id="logoutBtn" class="logout-btn">Выйти</button>
     `;
-    document.getElementById("logoutBtn").onclick = () =>
-      signOut(auth).then(() => location.reload());
+    document.getElementById("logoutBtn").addEventListener("click", () =>
+      signOut(auth).then(() => location.reload())
+    );
   } else {
     userBox.innerHTML = `
       <button id="googleSignIn">Войти через Google</button>
       <button id="facebookSignIn">Войти через Facebook</button>
     `;
-    // Используем setTimeout, чтобы гарантировать, что кнопки появились в DOM
-    setTimeout(() => {
-      const googleBtn = document.getElementById("googleSignIn");
-      const fbBtn = document.getElementById("facebookSignIn");
-      if (googleBtn) googleBtn.onclick = signInWithGoogle;
-      if (fbBtn) fbBtn.onclick = signInWithFacebook;
-    }, 10);
+
+    // Навешиваем обработчики через addEventListener после вставки
+    const googleBtn = document.getElementById("googleSignIn");
+    const fbBtn = document.getElementById("facebookSignIn");
+    if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
+    if (fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
   }
 }
 

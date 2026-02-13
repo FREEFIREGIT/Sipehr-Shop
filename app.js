@@ -5,7 +5,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithRedirect,
   getRedirectResult,
   onAuthStateChanged,
@@ -114,11 +113,6 @@ function signInWithGoogle() {
   signInWithRedirect(auth, provider);
 }
 
-function signInWithFacebook() {
-  const provider = new FacebookAuthProvider();
-  signInWithRedirect(auth, provider);
-}
-
 // Обработка результата редиректа после входа
 getRedirectResult(auth)
   .then(result => {
@@ -145,13 +139,9 @@ function updateUserUI(user) {
   } else {
     userBox.innerHTML = `
       <button id="googleSignIn">Войти через Google</button>
-      <button id="facebookSignIn">Войти через Facebook</button>
     `;
-
     const googleBtn = document.getElementById("googleSignIn");
-    const fbBtn = document.getElementById("facebookSignIn");
     if (googleBtn) googleBtn.addEventListener("click", signInWithGoogle);
-    if (fbBtn) fbBtn.addEventListener("click", signInWithFacebook);
   }
 }
 
